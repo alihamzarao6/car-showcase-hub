@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import { SearchManufacturer } from "./index";
+import { SearchBarProps } from "@/types";
 
 const SearchButton = ({ otherClasses }: { otherClasses: string }) => (
   <button type="submit" className={`-ml-3 z-10 ${otherClasses}`}>
@@ -18,53 +18,27 @@ const SearchButton = ({ otherClasses }: { otherClasses: string }) => (
   </button>
 )
 
-const SearchBar = () => {
-  const [manufacturer, setManufacturer] = useState('');
-  const [model, setModel] = useState('');
-
-  const router = useRouter();
-
-  /* Here in handleSearch we will not make any APi request when something changes in search bar instead of this we will change the url
-   Parameters on top and then Next.js will make a server-side request for us and get the data.  */
+const SearchBar = ({ setManufacturer, setModel }: SearchBarProps) => {
+  const [searchManufacturer, setSearchManufacturer] = useState('');
+  const [searchModel, setSearchModel] = useState('');
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (manufacturer.trim() === "" && model.trim() === "") {
-      return alert("Please fill in the Search Bar");
+    if (searchManufacturer.trim() === "" && searchModel.trim() === "") {
+      return alert("Please provide some input");
     };
 
-    updateSearchParams(model.toLowerCase(), manufacturer.toLowerCase());
-  };
-
-  const updateSearchParams = (model: string, manufacturer: string) => {
-    const searchParams = new URLSearchParams(window.location.search);
-
-    if (model) {
-      searchParams.set('model', model);
-    } else {
-      searchParams.delete('model');
-    }
-
-    if (manufacturer) {
-      searchParams.set('manufacturer', manufacturer);
-    } else {
-      searchParams.delete('manufacturer');
-    }
-
-    // Generate the new pathname with the updated search parameters
-    const newPathname = `${window.location.pathname}?${searchParams.toString()}`;
-
-    router.push(newPathname);
-
+    setManufacturer(searchManufacturer);
+    setModel(searchModel);
   };
 
   return (
     <form className="flex items-center justify-start max-sm:flex-col w-full relative max-sm:gap-4 max-w-3xl" onSubmit={handleSearch}>
       <div className="flex-1 max-sm:w-full flex justify-start items-center relative">
         <SearchManufacturer
-          manufacturer={manufacturer}
-          setManufacturer={setManufacturer}
+          selected={searchManufacturer}
+          setSelected={setSearchManufacturer}
         />
 
         <SearchButton otherClasses="sm:hidden" />
@@ -82,8 +56,8 @@ const SearchBar = () => {
         <input
           type="text"
           name="model"
-          value={model}
-          onChange={(e) => setModel(e.target.value)}
+          value={searchModel}
+          onChange={(e) => setSearchModel(e.target.value)}
           placeholder="Tiguan"
           className="w-full h-[48px] pl-12 p-4 bg-light-white rounded-r-full max-sm:rounded-full outline-none cursor-pointer text-sm"
         />

@@ -9,7 +9,7 @@ import { Combobox, Transition } from '@headlessui/react';
 import { SearchManufacturerProps } from '@/types';
 import { manufacturers } from '@/constants';
 
-const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacturerProps) => {
+const SearchManufacturer = ({ selected, setSelected }: SearchManufacturerProps) => {
   const [query, setQuery] = useState('');
 
   const filteredManufacturers = query === ''
@@ -22,7 +22,7 @@ const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacture
 
   return (
     <div className='flex-1 max-sm:w-full flex justify-start items-center'>
-      <Combobox value={manufacturer} onChange={setManufacturer}>
+      <Combobox value={selected} onChange={setSelected}>
         <div className='relative w-full'>
           <Combobox.Button className='absolute top-[14px]'>
             <Image
@@ -37,7 +37,7 @@ const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacture
           <Combobox.Input
             className="w-full h-[48px] pl-12 p-4 rounded-l-full max-sm:rounded-full bg-light-white outline-none cursor-pointer text-sm"
             placeholder='Volkswagen'
-            displayValue={(manufacturer: string) => manufacturer}
+            displayValue={(item: string) => item}
             onChange={(e) => setQuery(e.target.value)}
           />
 

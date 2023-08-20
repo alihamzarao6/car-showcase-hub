@@ -5,27 +5,19 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Transition, Listbox } from '@headlessui/react';
 
-import { CustomFilterProps, OptionProps } from '@/types';
-import { updateSearchParams } from '@/utils';
+import { CustomFilterProps } from '@/types';
 
 
-const CustomFilter = ({ title, options }: CustomFilterProps) => {
-  const router = useRouter();
-  const [selected, setSelected] = useState(options[0]);
-
-  const handleUpdateParams = (e: { title: string, value: string }) => {
-    const newPathName = updateSearchParams(title, e.value.toLowerCase());
-
-    router.push(newPathName);
-  }
+export default function CustomFilter<T>({ options, setFilter }: CustomFilterProps<T>) {
+  const [menu, setMenu] = useState(options[0]);
 
   return (
     <div className='w-fit'>
       <Listbox
-        value={selected}
+        value={menu}
         onChange={(e) => {
-          setSelected(e)
-          handleUpdateParams(e)
+          setMenu(e)
+          setFilter(e.value as unknown as T) // updating just value of filter not their title
         }}
       >
 
@@ -33,7 +25,7 @@ const CustomFilter = ({ title, options }: CustomFilterProps) => {
 
           <Listbox.Button className='relative w-full min-w-[127px] flex justify-between items-center cursor-default rounded-lg bg-white py-2 px-3 text-left shadow-md sm:text-sm border'>
             <span className='block truncate'>
-              {selected.title}
+              {menu.title}
             </span>
 
             <Image
@@ -75,5 +67,3 @@ const CustomFilter = ({ title, options }: CustomFilterProps) => {
     </div>
   )
 }
-
-export default CustomFilter
