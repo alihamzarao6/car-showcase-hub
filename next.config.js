@@ -3,9 +3,6 @@ const nextConfig = {
   images: {
     domains: ["cdn.imagin.studio"],
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  }
 };
 
 module.exports = nextConfig
